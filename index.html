@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="http://www.x3dom.org/release/x3dom.js"></script>
+    <link rel="stylesheet" href="http://www.x3dom.org/release/x3dom.css">
+    <link rel="icon" href="data:;base64,=">
+    <meta charset="UTF-8">
+    <style>
+    	x3d
+    	{
+    		border:2px solid darkorange;
+    	}
+    </style>
+
+     <script type="text/javascript">
+    	function getData(querry, elem)
+    	{
+    		var xhttp = new XMLHttpRequest();
+    		xhttp.onreadystatechange = function() {
+  			if (this.readyState == 4 && this.status == 200) {
+    			var json_Object = this.responseText;
+    			var value = JSON.parse(json_Object);
+    			elem.setAttribute('size', value);
+    			}
+			};
+    		var myJson = JSON.stringify(querry);
+    		xhttp.open("POST", "http://localhost:8080", true);
+    		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded", 'Access-Control-Allow-Headers', '*');
+			xhttp.send(myJson);
+
+    	}
+	   	
+
+    	var connection = new WebSocket('ws://localhost:9999');
+		function addConn(dbName){
+    		var jsonObject = JSON.stringify({Method:"add",dbName:dbName});
+			connection.send(jsonObject);
+
+		}
+
+		function removeConn(dbName){
+			var jsonObject = JSON.stringify({Method:"remove",dbName:dbName});
+			connection.send(jsonObject);
+		}
+		connection.onmessage = function(e){
+				elem = document.getElementsByClassName(e.data);
+				for (i = 0; i < elem.length; i++) { 
+  						elem[i].onclick();
+				}
+			};
+  
+			
+    </script>
+
+	<title>Beispiel</title>
+
+
+	<ProtoDeclare name='wahlen'>
+		<ProtoInterface>
+			<field name='newAppearance'>
+				<appearance>
+					<Material diffuseColor='1 0 0'></Material>
+				</appearance>
+			</field>
+			<field name='newHeight' size='1 1 1'/>
+		</ProtoInterface>
+		<ProtoBody>
+			<shape>
+				<Box class='bundestagswahlen'/>
+			</shape>
+		</ProtoBody>
+	</ProtoDeclare>
+		
+	<ProtoDeclare name='Partei'>
+		<ProtoInterface>
+			<field name='newAppearance2'>
+				<appearance>
+					<material ambientIntensity='0.0933' diffuseColor='0.32 0.54 0.26' shininess='0.51' specularColor='0.46 0.46 0.46'></material>
+				</appearance>
+			</field> 
+			<field name='newText'/>
+		</ProtoInterface>
+		<ProtoBody>
+			<shape>
+				<text>
+					<fontstyle size='0.5'/>
+				</text>
+			</shape>
+		</ProtoBody>
+	</ProtoDeclare>
+</head>
+
+
+
+
+<body>
+	<h1>Bundestagswahlen</h1>
+	<x3d width='800px' height='400px'>
+		<scene>
+			<transform translation = '-6 0 0'>
+				<shape>
+					<ProtoInstance name='wahlen'>
+						<fieldValue name=newHeight sql="SELECT Resultat FROM bundestagswahlen INTO size WHERE Partei='CDU'" 
+						onclick='getData({SELECT:"Resultat", FROM:"bundestagswahlen", WHERE:"Partei=CDU"}, this);'/>
+						<fieldValue name='newAppearance' sql="SELECT Parteifarbe FROM bundestagswahlen INTO material.diffusecolor WHERE Partei='CDU'">
+						</fieldValue>
+					</ProtoInstance>
+				</shape>
+			</transform>
+			<transform translation = '-6 0 1'>
+				<ProtoInstance name='Partei'>
+					<fieldValue name='newText' sql="SELECT Partei FROM bundestagswahlen INTO string WHERE Partei='CDU'"/>
+				</ProtoInstance>
+			</transform>
+			<transform translation = '-4 0 0'>
+				<shape>
+					<ProtoInstance name='wahlen'>
+						<fieldValue name=newHeight sql="SELECT Resultat FROM bundestagswahlen INTO size WHERE Partei='SPD'" 
+						onclick='getData({SELECT:"Resultat", FROM:"bundestagswahlen", WHERE:"Partei=SPD"}, this);'/>
+						<fieldValue name='newAppearance' sql="SELECT Parteifarbe FROM bundestagswahlen INTO material.diffusecolor WHERE Partei='SPD'">
+						</fieldValue>
+					</ProtoInstance>
+				</shape>
+			</transform>
+			<transform translation = '-4 0 1'>
+				<ProtoInstance name='Partei'>
+					<fieldValue name='newText' sql="SELECT Partei FROM bundestagswahlen INTO string WHERE Partei='SPD'"/>
+				</ProtoInstance>
+			</transform>
+			<transform translation = '-2 0 0'>
+				<shape>
+					<ProtoInstance name='wahlen'>
+						<fieldValue name=newHeight sql="SELECT Resultat FROM bundestagswahlen INTO size WHERE Partei='AFD'" 
+						onclick='getData({SELECT:"Resultat", FROM:"bundestagswahlen", WHERE:"Partei=AFD"}, this);'/>
+						<fieldValue name='newAppearance' sql="SELECT Parteifarbe FROM bundestagswahlen INTO material.diffusecolor WHERE Partei='AFD'">
+						</fieldValue>
+					</ProtoInstance>
+				</shape>
+			</transform>
+			<transform translation = '-2 0 1'>
+				<ProtoInstance name='Partei'>
+					<fieldValue name='newText' sql="SELECT Partei FROM bundestagswahlen INTO string WHERE Partei='AFD'"/>
+				</ProtoInstance>
+			</transform>
+			<transform translation = '0 0 0'>
+				<shape>
+					<ProtoInstance name='wahlen'>
+						<fieldValue name=newHeight sql="SELECT Resultat FROM bundestagswahlen INTO size WHERE Partei='FDP'" 
+						onclick='getData({SELECT:"Resultat", FROM:"bundestagswahlen", WHERE:"Partei=FDP"}, this);'/>
+						<fieldValue name='newAppearance' sql="SELECT Parteifarbe FROM bundestagswahlen INTO material.diffusecolor WHERE Partei='FDP'">
+						</fieldValue>
+					</ProtoInstance>
+				</shape>
+			</transform>
+			<transform translation = '0 0 1'>
+				<ProtoInstance name='Partei'>
+					<fieldValue name='newText' sql="SELECT Partei FROM bundestagswahlen INTO string WHERE Partei='FDP'"/>
+				</ProtoInstance>
+			</transform>
+			<transform translation = '2 0 0'>
+				<shape>
+					<ProtoInstance name='wahlen'>
+						<fieldValue name=newHeight sql="SELECT Resultat FROM bundestagswahlen INTO size WHERE Partei='Linke'" 
+						onclick='getData({SELECT:"Resultat", FROM:"bundestagswahlen", WHERE:"Partei=Linke"}, this);'/>
+						<fieldValue name='newAppearance' sql="SELECT Parteifarbe FROM bundestagswahlen INTO material.diffusecolor WHERE Partei='Linke'">
+						</fieldValue>
+					</ProtoInstance>
+				</shape>
+			</transform>
+			<transform translation = '2 0 1'>
+				<ProtoInstance name='Partei'>
+					<fieldValue name='newText' sql="SELECT Partei FROM bundestagswahlen INTO string WHERE Partei='Linke'"/>
+				</ProtoInstance>
+			</transform>
+			<transform translation = '4 0 0'>
+				<shape>
+					<ProtoInstance name='wahlen'>
+						<fieldValue name=newHeight sql="SELECT Resultat FROM bundestagswahlen INTO size WHERE Partei='Grüne'" 
+						onclick='getData({SELECT:"Resultat", FROM:"bundestagswahlen", WHERE:"Partei=Grüne"}, this);'/>
+						<fieldValue name='newAppearance' sql="SELECT Parteifarbe FROM bundestagswahlen INTO material.diffusecolor WHERE Partei='Grüne'">
+						</fieldValue>
+					</ProtoInstance>
+				</shape>
+			</transform>
+			<transform translation = '4 0 1'>
+				<ProtoInstance name='Partei'>
+					<fieldValue name='newText' sql="SELECT Partei FROM bundestagswahlen INTO string WHERE Partei='Grüne'"/>
+				</ProtoInstance>
+			</transform>
+		</scene>
+	</x3d>
+
+
+	<button onclick='addConn("bundestagswahlen");'>add Connection</button>
+	<button  onclick='removeConn("bundestagswahlen");'>remove Connection</button>
+
+
+
+
+
